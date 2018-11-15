@@ -136,3 +136,86 @@ public class Prospector : MonoBehaviour {
             cd.faceUp = faceUp; 
         }
     }
+    public void CardClicked(CardProspector cd)
+    {
+        switch (cd.state)
+        {
+            case eCardState.target:
+                break;
+            case eCardState.drawpile:
+                MoveToDiscard(target); 
+                MoveToTarget(Draw()); 
+                UpdateDrawPile(); 
+                ScoreManager.EVENT(eScoreEvent.draw);
+                FloatingScoreHandler(eScoreEvent.draw);
+                break;
+            case eCardState.tableau:
+                
+                bool validMatch = true;
+                if (!cd.faceUp)
+                {
+               
+                    validMatch = false;
+                }
+                if (!AdjacentRank(cd, target))
+                {
+                    
+                    validMatch = false;
+                }
+                if (!validMatch)
+                    return; 
+                tableau.Remove(cd); 
+                MoveToTarget(cd); 
+                SetTableauFaces(); 
+                ScoreManager.EVENT(eScoreEvent.mine);
+                FloatingScoreHandler(eScoreEvent.mine);
+                break;
+        }
+        
+        CheckForGameOver();
+    }
+
+    void CheckForGameOver()
+    {
+        
+        if (tableau.Count == 0)
+        {
+          
+            GameOver(true);
+            return;
+        }
+       
+        if (drawPile.Count > 0)
+        {
+            return;
+        }
+   
+        foreach (CardProspector cd in tableau)
+        {
+            if (AdjacentRank(cd, target))
+            {
+                
+                return;
+            }
+        }
+      
+        GameOver(false);
+    }
+
+    void GameOver(bool won)
+    {
+        if (won)
+        {
+            
+            ScoreManager.EVENT(eScoreEvent.gameWin);
+            FloatingScoreHandler(eScoreEvent.gameWin);
+        }
+        else
+        {
+         
+            ScoreManager.EVENT(eScoreEvent.gameLoss);
+            FloatingScoreHandler(eScoreEvent.gameWin);
+        }
+       
+        SceneManager.LoadScene("__Prospector_Scene_0");
+    }
