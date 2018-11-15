@@ -219,3 +219,133 @@ public class Prospector : MonoBehaviour {
        
         SceneManager.LoadScene("__Prospector_Scene_0");
     }
+    public bool AdjacentRank(CardProspector c0, CardProspector c1)
+    {
+       
+        if (!c0.faceUp || !c1.faceUp) return (false);
+        
+        if (Mathf.Abs(c0.rank - c1.rank) == 1)
+        {
+            return (true);
+        }
+        
+        if (c0.rank == 1 && c1.rank == 13) return (true);
+        if (c0.rank == 13 && c1.rank == 1) return (true);
+     
+        return (false);
+    }
+
+  
+    void FloatingScoreHandler(eScoreEvent evt)
+    {
+        List<Vector2> fsPts;
+        switch (evt)
+        {
+            case eScoreEvent.draw: 
+            case eScoreEvent.gameWin: 
+            case eScoreEvent.gameLoss: 
+                if (fsRun != null)
+                {
+                    
+                    fsPts = new List<Vector2>();
+                    fsPts.Add(fsPosRun);
+                    fsPts.Add(fsPosMid2);
+                    fsPts.Add(fsPosEnd);
+                    fsRun.reportFinishTo = Scoreboard.S.gameObject;
+                    fsRun.Init(fsPts, 0, 1);
+                    
+                    fsRun.fontSizes = new List<float>(new float[] { 28, 36, 4 });
+                    fsRun = null; 
+                }
+                break;
+            case eScoreEvent.mine:
+                FloatingScore fs;
+                
+                Vector2 p0 = Input.mousePosition;
+                p0.x /= Screen.width;
+                p0.y /= Screen.height;
+                fsPts = new List<Vector2>();
+                fsPts.Add(p0);
+                fsPts.Add(fsPosMid);
+                fsPts.Add(fsPosRun);
+                fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN, fsPts);
+                fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
+                if (fsRun == null)
+                {
+                    fsRun = fs;
+                    fsRun.reportFinishTo = null;
+                }
+                else
+                {
+                    fs.reportFinishTo = fsRun.gameObject;
+                }
+                break;
+        }
+    }
+
+}
+public bool AdjacentRank(CardProspector c0, CardProspector c1)
+{
+   
+    if (!c0.faceUp || !c1.faceUp) return (false);
+    
+    if (Mathf.Abs(c0.rank - c1.rank) == 1)
+    {
+        return (true);
+    }
+   
+    if (c0.rank == 1 && c1.rank == 13) return (true);
+    if (c0.rank == 13 && c1.rank == 1) return (true);
+   
+    return (false);
+}
+
+void FloatingScoreHandler(eScoreEvent evt)
+{
+    List<Vector2> fsPts;
+    switch (evt)
+    {
+        
+        case eScoreEvent.draw: 
+        case eScoreEvent.gameWin: 
+        case eScoreEvent.gameLoss: 
+            if (fsRun != null)
+            {
+               
+                fsPts = new List<Vector2>();
+                fsPts.Add(fsPosRun);
+                fsPts.Add(fsPosMid2);
+                fsPts.Add(fsPosEnd);
+                fsRun.reportFinishTo = Scoreboard.S.gameObject;
+                fsRun.Init(fsPts, 0, 1);
+                
+                fsRun.fontSizes = new List<float>(new float[] { 28, 36, 4 });
+                fsRun = null; 
+            }
+            break;
+        case eScoreEvent.mine: 
+            FloatingScore fs;
+           
+            Vector2 p0 = Input.mousePosition;
+            p0.x /= Screen.width;
+            p0.y /= Screen.height;
+            fsPts = new List<Vector2>();
+            fsPts.Add(p0);
+            fsPts.Add(fsPosMid);
+            fsPts.Add(fsPosRun);
+            fs = Scoreboard.S.CreateFloatingScore(ScoreManager.CHAIN, fsPts);
+            fs.fontSizes = new List<float>(new float[] { 4, 50, 28 });
+            if (fsRun == null)
+            {
+                fsRun = fs;
+                fsRun.reportFinishTo = null;
+            }
+            else
+            {
+                fs.reportFinishTo = fsRun.gameObject;
+            }
+            break;
+    }
+}
+
+}
