@@ -29,7 +29,7 @@ public class CardProspector : Card
         
         Prospector.S.CardClicked(this);
       
-        base.OnMouseUpAsButton(); // a
+        base.OnMouseUpAsButton(); 
     }
 
 }
